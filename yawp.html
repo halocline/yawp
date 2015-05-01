@@ -1,0 +1,112 @@
+<!-- yawp.html -->
+<head>
+	<title>YAWP</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+	<div class="container-fluid">
+		<header>
+			<h1>YAWP</h1>
+		</header>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<h2>Challenges</h2>
+						<form class="new-challenge">
+							<input type="text" name="challengename" placeholder="Type to add new challenge" />
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<ul>
+							{{#each challenges}}
+								{{> challenge}}
+							{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Objectives</h2>
+				<form class="new-objective">
+					<input type="text" name="text" placeholder="Enter challenge's objective"/>
+				</form>
+				<ul>
+					{{#each objectives}}
+						{{> objective}}
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+
+<template name="challenge">
+	<li class="">
+		<div class="row">
+			<div class="col-md-12">
+				<table>
+					<tr>
+						<td>{{name}}</td>
+						<!--<td>{{_id}}</td>-->
+						<td>{{createdAt}}</td>
+						<td>
+							<button class="toggle-edit">Edit</button>
+							<button class="delete">&times;</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<table class="table table-hover">
+					<thead>
+						<th></th>
+						<th>Objective</th>
+						<th>Created At</th>
+						<th></th>
+					</thead>
+					<tbody>
+					{{#each objectives}}
+						{{> objective}}
+					{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<form class="new-objective">
+					<input type="text" name="text" placeholder="Add an objective to this challenge..." />
+					<input type="hidden" name="challengeId" value="{{_id}}" />
+				</form>
+			</div>
+		</div>
+	</li>
+</template>
+
+<template name="objective">
+	<tr class="">
+		<td>
+			<span class="{{icon}}"></span>
+		</td>
+		<td>
+			{{name}}
+		</td>
+		<td>
+			{{createdAt}}
+		</td>
+		<td>
+			<button class="toggle-edit">Edit</button>
+			<button class="delete">&times;</button>
+		</td>
+	</tr>
+</template>
