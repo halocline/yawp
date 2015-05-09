@@ -53,7 +53,10 @@ if (Meteor.isClient) {
 
   Template.challenges.helpers({
     challenges : function () {
-      return Challenges.find();
+      return Challenges.find(
+        {},
+        {sort: {name: 1}}
+      );
     },
     objectives : function () {
       return Objectives.find();
@@ -84,7 +87,14 @@ if (Meteor.isClient) {
   });
 
   /* challenge */
-  Template.challenge.events({});
+  Template.challenge.events({
+    "change .challenge-detail" : function (event) {
+      var key = event.target.name;
+      var val = event.target.value;
+
+      Meteor.call("updateChallenge", this._id, key, val);
+    }
+  });
   Template.challenge.helpers({
     objectives : function () {
       return Objectives.find({ challengeId : this._id });
@@ -102,13 +112,10 @@ if (Meteor.isClient) {
   /* objectiveCard */
   Template.objectiveCard.events({
     "change .objectiveVal" : function (event) {
-      console.log(event);
       var key = event.target.name;
       var val = event.target.value;
-      var objective = event.target.closest('.update-objective').objective.value;
-      console.log(objective);
 
-      Meteor.call("updateObjective", this._id, key, val, objective);
+      Meteor.call("updateObjective", this._id, key, val);
     }
   });
   Template.objectiveCard.helpers({});
@@ -137,6 +144,20 @@ Meteor.methods({
       createdAt : new Date()
     });
   },
+  updateChallenge : function (challengeId, key, value) {
+    var challenge = Challenges.findOne(challengeId);
+    var keyval = {};
+    keyval[key] = value;
+    Challenges.update(
+      challenge,
+      {
+        $set : keyval,
+        $currentDate : {
+          modifiedAt : true
+        }
+      }
+    );
+  },
   deleteChallenge : function (challengeId) {
     var challenge = Challenges.findOne(challengeId);
 
@@ -149,20 +170,28 @@ Meteor.methods({
       createdAt : new Date()
     });
   },
-  updateObjective : function (objectiveId, key, value, obj) {
+  updateObjective : function (objectiveId, key, value) {
     var objective = Objectives.findOne(objectiveId);
     var keyval = {};
     keyval[key] = value;
-    keyval["objective"] = obj;
-    console.log(keyval);
     Objectives.update(
       objective,
       { 
         $set : keyval,
         $currentDate : { 
-          modifiedAt : { $type : "date" }
+          modifiedAt : true
         }
       }
+    );
+    Meteor.call("setObjectiveName", objectiveId);
+  },
+  setObjectiveName : function (objectiveId) {
+    var objective = Objectives.findOne(objectiveId);
+    var val = objective.action + ' ' + objective.on + ' ' + objective.object;
+
+    Objectives.update(
+      objective,
+      { $set : { "objective" : val } }
     );
   },
   deleteObjective : function (objectiveId) {

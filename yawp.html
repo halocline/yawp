@@ -42,11 +42,11 @@
 			<div class="col-md-12">
 				<div class="row">
 					<div class="col-md-12">
-						<h2>Challenges</h2>
+						<h1>Challenges</h1>
 						<form class="new-challenge">
 							<div class="form-group">
 								<label for="newChallenge" class="sr-only">Add Challenge</label>
-								<div class="col-sm-4">
+								<div class="col-sm-5">
 									<input id="newChallenge" name="challengename" type="text" class="form-control" placeholder="Add new challenge ..." />
 								</div>
 							</div>
@@ -54,7 +54,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-sm-6">
 						{{#each challenges}}
 							{{> challengeItem}}
 						{{/each}}
@@ -67,147 +67,122 @@
 
 <template name="challengeItem">
 	<div class="row card">
-		<div class="col-md-12">
+		<div class="col-sm-12">
 			<!-- BEGIN Challenge -->
 				<div class="row">
-					<div class="col-sm-6">
-						<table class="table">
-							<tr>
-								<td><a href="/challenge/{{_id}}"><h4>{{name}}</h4></a></td>
-								<!--<td><a href="{{pathFor 'challenge' _id=this._id}}"><h4>{{name}}</h4></a></td>-->
-								<td>
-									<button class="toggle-edit btn btn-default btn-xs">Edit</button>
-								</td>
-								<td>
-									<button class="delete btn btn-danger btn-xs">&times;</button>
-								</td>
-							</tr>
-						</table>
+					<div class="col-sm-12">
+						<a href="/challenge/{{_id}}"><h2>{{name}}</h2></a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						{{description}}
 					</div>
 				</div>
 			<!-- END Challenge -->
 			<!-- BEGIN Challenge w/ Objectives -->
 				<div class="row">
-					<div class="col-md-9">
-						<table class="table table-hover">
-							<thead>
-								<th></th>
-								<th>Objective</th>
-								<th>Created At</th>
-								<th>Modified At</th>
-								<th colspan="2">Actions</th>
-							</thead>
-							<tbody>
-							{{#each objectives}}
-								{{> objective}}
-							{{/each}}
-							</tbody>
-						</table>
+					<div class="col-sm-12">
+						<h3>Objectives</h3>
+						{{#each objectives}}
+							{{> objective}}
+						{{/each}}
 					</div>
 				</div>
 			<!-- END Challenge w/ Objectives -->
-			<!-- BEGIN Add Objective to Challenge -->
+			<!-- BEGIN Challenge actions -->
 				<div class="row">
-					<div class="col-md-12">
-						<form class="new-objective">
-							<div class="form-group">
-								<label for="addObjective" class="sr-only">New Objective</label>
-								<div class="col-md-4">
-									<input id="addObjective" name="objective" type="objective" class="form-control" placeholder="Add an objective to this challenge ..." />
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="challengeId" class="sr-only">Challenge Id</label>
-								<input id="challengeId" name="challengeId" type="hidden" value="{{_id}}" />
-							</div>
-						</form>
+					<div class="col-sm-12">
+						<button class="delete btn btn-danger pull-right">&times;</button>
 					</div>
 				</div>
-			<!-- END Add Objective to Challenge -->
+			<!-- END Challenge actions -->
 		</div>
 	</div>
 </template>
 
 <template name="objective">
-	<tr class="">
-		<td>
+	<div class="row">
+		<div class="col-sm-12">
 			<span class="{{icon}}"></span>
-		</td>
-		<td>
 			{{objective}}
-		</td>
-		<td>
-			{{createdAt}}
-		</td>
-		<td>
-			{{modifiedAt}}
-		</td>
-		<td>
-			<button class="toggle-edit btn btn-default btn-xs">Edit</button>
-		</td>
-		<td>
-			<button class="delete btn btn-danger btn-xs">&times;</button>
-		</td>
-	</tr>
+		</div>
+	</div>
 </template>
 
 <template name="objectiveCard">
-	<div class="card col-sm-3">
+	<div class="card col-sm-6">
 		<div class="row">
 			<div class="col-xs-12">
-				<h2>{{objective}}</h2>
+				<h3>
+					<span class="{{icon}}"></span>
+					{{objective}}
+				</h3>
 			</div>
 		</div>
 		<div class="row">
-			<form class="form-horizontal update-objective">
-				<div class="form-group">
-					<label for="objective" class="control-label col-xs-3">Objective</label>
-					<div class="col-xs-9">
-						<input id="objective" name="objective" class="form-control objectiveVal" type="text" value="{{action}} {{on}} {{object}}" disabled placeholder="Type what someone needs to do to complete the challenge...">
+			<div class="col-xs-12">
+				<form class="form-inline update-objective">
+					<div class="form-group">
+						<label for="action" class="control-label sr-only">Action</label>
+						<div class="">
+							<select id="action" name="action" class="form-control objectiveVal" value="{{action}}">
+								<option selected>{{action}}</option>
+	  						<option>Record your geolocation</option>
+	  						<option>Take a photo</option>
+	  						<option>Tweet</option>
+	  						<option>Post to Facebook</option>
+	  						<option>...</option>
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="action" class="control-label col-xs-3">Action</label>
-					<div class="col-xs-9">
-						<select id="action" name="action" class="form-control objectiveVal" value="{{action}}">
-							<option selected>{{action}}</option>
-  						<option>Record your geolocation</option>
-  						<option>Take a photo</option>
-  						<option>Tweet</option>
-  						<option>Post to Facebook</option>
-  						<option>...</option>
+					<div class="form-group">
+						<label for="on" class="control-label sr-only">On</label>
+						<div class="">
+							<select id="on" name="on" class="form-control objectiveVal" value="{{on}}">
+								<option selected>{{on}}</option>
+	  						<option>at the</option>
+	  						<option>of the</option>
+	  						<option>on the</option>
+	  						<option>of your</option>
+	  						<option>your</option>
+	  						<option>...</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="object" class="control-label sr-only">What</label>
+						<div class="">
+							<input id="object" name="object" class="form-control objectiveVal" type="text" value="{{object}}" placeholder="What do you want them to {{action}}...">
+						</div>
+					</div>
+				</form>	
+				<form class="form-horizontal update-objective">
+					<div class="form-group">
+						<label for="type" class="control-label">Type</label>
+						<select id="type" name="type" class="form-control objectiveVal" value="{{type}}">
+							<option selected>{{type}}</option>
+  						<option>geolocation</option>
+  						<option>tweet</option>
+  						<option>photo</option>
 						</select>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="on" class="control-label col-xs-3">On</label>
-					<div class="col-xs-9">
-						<select id="on" name="on" class="form-control objectiveVal" value="{{on}}">
-							<option selected>{{on}}</option>
-  						<option>at the</option>
-  						<option>of the</option>
-  						<option>on the</option>
-  						<option>of your</option>
-  						<option>your</option>
-  						<option>...</option>
+					<div class="form-group">
+						<label for="icon" class="control-label">Icon</label>
+						<select id="icon" name="icon" class="form-control objectiveVal" value="{{icon}}">
+							<option value="{{icon}}"></option>
+  						<option value="glyphicon glyphicon-map-marker">geolocation</option>
+  						<option value="glyphicon glyphicon-share">share</option>
+  						<option value="glyphicon glyphicon-camera">camera</option>
 						</select>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="object" class="control-label col-xs-3">What</label>
-					<div class="col-xs-9">
-						<input id="object" name="object" class="form-control objectiveVal" type="text" value="{{object}}" placeholder="What do you want them to {{action}}...">
-					</div>
-				</div>
-				<div class="col-xs-9">
-					{{modifiedAt}}
-				</div>
-				<div class="form-group">
-    			<div class="col-xs-1">
-      			<button type="" class="btn btn-danger">&times;</button>
-    			</div>
-  			</div>
-			</form>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+      	<button type="" class="btn btn-danger pull-right">&times;</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -220,7 +195,27 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-sm-6">
+				<form class="challenge-details">
+					<div class="form-group">
+						<label for="" class="sr-only">Add Challenge</label>
+						<textarea id="description" name="description" value="{{description}}" type="text-area" class="form-control challenge-detail" rows="4" placeholder="Tell us about this challenge. Why is it special? How will it enrich my life? ..."></textarea>
+					</div>
+					<div class="form-group">
+						<label for="googlemap" class="control-label">Google Map Link</label>
+							<input id="googlemap" name="googlemap" class="form-control challenge-detail" type="text" value="{{googlemap}}" placeholder="Paste a link to a Google map...">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<iframe class="googlemap" src="{{googlemap}}"></iframe>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-sm-12">
+				<h2>Objectives</h2>
 				{{#each objectives}}
 					{{> objectiveCard}}
 				{{/each}}
