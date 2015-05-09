@@ -5,11 +5,38 @@
 </head>
 
 <body>
-	<div class="container-fluid">
-		<header>
-			<h1>YAWP</h1>
-		</header>
-	</div>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        	<span class="sr-only">Toggle navigation</span>
+        	<span class="icon-bar"></span>
+        	<span class="icon-bar"></span>
+        	<span class="icon-bar"></span>
+      	</button>
+      	<a class="navbar-brand" href="#">YAWP</a>
+    	</div>
+    	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      	<li class=""><a href="#">Collections</a></li>
+        <li class=""><a href="{{pathFor 'challenges'}}">Challenges</a></li>
+        <li class=""><a href="{{pathFor 'objectives'}}">Objectives</a></li>
+        <li class=""><a href="#">Users</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<header>
+		<div class="container-fluid">
+		</div>
+	</header>
+</body>
+
+<template name="home">
+	<h1>Home</h1>
+</template>
+
+<template name="challenges">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
@@ -17,80 +44,88 @@
 					<div class="col-md-12">
 						<h2>Challenges</h2>
 						<form class="new-challenge">
-							<input type="text" name="challengename" placeholder="Type to add new challenge" />
+							<div class="form-group">
+								<label for="newChallenge" class="sr-only">Add Challenge</label>
+								<div class="col-sm-4">
+									<input id="newChallenge" name="challengename" type="text" class="form-control" placeholder="Add new challenge ..." />
+								</div>
+							</div>
 						</form>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<ul>
-							{{#each challenges}}
-								{{> challenge}}
-							{{/each}}
-						</ul>
+						{{#each challenges}}
+							{{> challengeItem}}
+						{{/each}}
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<h2>Objectives</h2>
-				<form class="new-objective">
-					<input type="text" name="text" placeholder="Enter challenge's objective"/>
-				</form>
-				<ul>
-					{{#each objectives}}
-						{{> objective}}
-					{{/each}}
-				</ul>
-			</div>
+	</div>
+</template>
+
+<template name="challengeItem">
+	<div class="row card">
+		<div class="col-md-12">
+			<!-- BEGIN Challenge -->
+				<div class="row">
+					<div class="col-sm-6">
+						<table class="table">
+							<tr>
+								<td><a href="/challenge/{{_id}}"><h4>{{name}}</h4></a></td>
+								<!--<td><a href="{{pathFor 'challenge' _id=this._id}}"><h4>{{name}}</h4></a></td>-->
+								<td>
+									<button class="toggle-edit btn btn-default btn-xs">Edit</button>
+								</td>
+								<td>
+									<button class="delete btn btn-danger btn-xs">&times;</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			<!-- END Challenge -->
+			<!-- BEGIN Challenge w/ Objectives -->
+				<div class="row">
+					<div class="col-md-9">
+						<table class="table table-hover">
+							<thead>
+								<th></th>
+								<th>Objective</th>
+								<th>Created At</th>
+								<th>Modified At</th>
+								<th colspan="2">Actions</th>
+							</thead>
+							<tbody>
+							{{#each objectives}}
+								{{> objective}}
+							{{/each}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			<!-- END Challenge w/ Objectives -->
+			<!-- BEGIN Add Objective to Challenge -->
+				<div class="row">
+					<div class="col-md-12">
+						<form class="new-objective">
+							<div class="form-group">
+								<label for="addObjective" class="sr-only">New Objective</label>
+								<div class="col-md-4">
+									<input id="addObjective" name="objective" type="objective" class="form-control" placeholder="Add an objective to this challenge ..." />
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="challengeId" class="sr-only">Challenge Id</label>
+								<input id="challengeId" name="challengeId" type="hidden" value="{{_id}}" />
+							</div>
+						</form>
+					</div>
+				</div>
+			<!-- END Add Objective to Challenge -->
 		</div>
 	</div>
-</body>
-
-<template name="challenge">
-	<li class="">
-		<div class="row">
-			<div class="col-md-12">
-				<table>
-					<tr>
-						<td>{{name}}</td>
-						<!--<td>{{_id}}</td>-->
-						<td>{{createdAt}}</td>
-						<td>
-							<button class="toggle-edit">Edit</button>
-							<button class="delete">&times;</button>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-8">
-				<table class="table table-hover">
-					<thead>
-						<th></th>
-						<th>Objective</th>
-						<th>Created At</th>
-						<th></th>
-					</thead>
-					<tbody>
-					{{#each objectives}}
-						{{> objective}}
-					{{/each}}
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<form class="new-objective">
-					<input type="text" name="text" placeholder="Add an objective to this challenge..." />
-					<input type="hidden" name="challengeId" value="{{_id}}" />
-				</form>
-			</div>
-		</div>
-	</li>
 </template>
 
 <template name="objective">
@@ -99,14 +134,97 @@
 			<span class="{{icon}}"></span>
 		</td>
 		<td>
-			{{name}}
+			{{objective}}
 		</td>
 		<td>
 			{{createdAt}}
 		</td>
 		<td>
-			<button class="toggle-edit">Edit</button>
-			<button class="delete">&times;</button>
+			{{modifiedAt}}
+		</td>
+		<td>
+			<button class="toggle-edit btn btn-default btn-xs">Edit</button>
+		</td>
+		<td>
+			<button class="delete btn btn-danger btn-xs">&times;</button>
 		</td>
 	</tr>
+</template>
+
+<template name="objectiveCard">
+	<div class="card col-sm-3">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>{{objective}}</h2>
+			</div>
+		</div>
+		<div class="row">
+			<form class="form-horizontal update-objective">
+				<div class="form-group">
+					<label for="objective" class="control-label col-xs-3">Objective</label>
+					<div class="col-xs-9">
+						<input id="objective" name="objective" class="form-control objectiveVal" type="text" value="{{action}} {{on}} {{object}}" disabled placeholder="Type what someone needs to do to complete the challenge...">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="action" class="control-label col-xs-3">Action</label>
+					<div class="col-xs-9">
+						<select id="action" name="action" class="form-control objectiveVal" value="{{action}}">
+							<option selected>{{action}}</option>
+  						<option>Record your geolocation</option>
+  						<option>Take a photo</option>
+  						<option>Tweet</option>
+  						<option>Post to Facebook</option>
+  						<option>...</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="on" class="control-label col-xs-3">On</label>
+					<div class="col-xs-9">
+						<select id="on" name="on" class="form-control objectiveVal" value="{{on}}">
+							<option selected>{{on}}</option>
+  						<option>at the</option>
+  						<option>of the</option>
+  						<option>on the</option>
+  						<option>of your</option>
+  						<option>your</option>
+  						<option>...</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="object" class="control-label col-xs-3">What</label>
+					<div class="col-xs-9">
+						<input id="object" name="object" class="form-control objectiveVal" type="text" value="{{object}}" placeholder="What do you want them to {{action}}...">
+					</div>
+				</div>
+				<div class="col-xs-9">
+					{{modifiedAt}}
+				</div>
+				<div class="form-group">
+    			<div class="col-xs-1">
+      			<button type="" class="btn btn-danger">&times;</button>
+    			</div>
+  			</div>
+			</form>
+		</div>
+	</div>
+</template>
+
+<template name="challenge">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>{{name}}</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				{{#each objectives}}
+					{{> objectiveCard}}
+				{{/each}}
+			</div>
+		</div>
+	</div>
 </template>
